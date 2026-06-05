@@ -1,4 +1,4 @@
-# AI Skill Kitchen
+# AI Skill Kitchen (we cook)
 
 A small, growing collection of LLM agent skills and shared markdowns that I've built and found useful enough to share. Skills here are designed primarily for Claude (Claude Code, Cowork, the Claude Agent SDK), but the patterns and prompts often translate to other LLM frameworks with light adaptation.
 
