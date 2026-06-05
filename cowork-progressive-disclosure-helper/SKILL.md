@@ -1,13 +1,36 @@
 ---
 name: cowork-progressive-disclosure-helper
-description: Proactively monitors a running Cowork session for context window pressure and alerts the user before automatic compaction takes over, so they can do targeted compaction or split off subordinate sister sessions deliberately. Use this skill whenever a session has been running long, has accumulated multiple substantial tool calls, file reads, or web fetches, has just completed a sub-task, or when the user mentions context, compaction, token usage, session length, splitting, bifurcation, sister sessions, subordinate sessions, handoff, or how much context is left. Also use whenever a natural transition point appears (a deliverable ships, a topic shifts, an investigation wraps up), so the user can choose to checkpoint or bifurcate cleanly instead of letting automatic compaction strip context unpredictably. The user prefers manual control over what carries forward, so err on the side of alerting before pressure becomes critical, not after.
+description: Monitors a Cowork session for context pressure and alerts before automatic compaction, then walks the user through a 6-level intervention ladder that includes role-aware multi-session moves (Manager, Architect, Developer, Schema Expert, Subordinate specialists) with bridge file scaffolding. Use whenever a session has run long, accumulated heavy tool calls or file reads, completed a sub-task, or when the user mentions context, compaction, tokens, session length, bifurcation, sister sessions, subordinate sessions, handoff, bridge files, or role dispatch. Also fire at natural transition points (deliverable ships, topic shifts, investigation wraps), or when the user is operating a multi-session Cowork architecture and a scope is ready for handoff. The user prefers manual control over what carries forward, so err on the side of alerting before pressure becomes critical.
 ---
 
-# Cowork session pressure alert and bifurcation helper
+# Cowork progressive disclosure helper
 
-This skill replaces the surprise of automatic compaction with deliberate, user-driven session management. When a Cowork session is approaching context pressure or has reached a natural break point, alert the user with a structured heads-up and offer concrete options: continue, checkpoint, or bifurcate.
+This skill replaces the surprise of automatic compaction with deliberate, user-driven session management. When a Cowork session is approaching context pressure or has reached a natural break point, alert the user with a structured heads-up and offer a graduated set of options ranging from "do nothing" to "spin up a new subordinate session with a proper bridge file."
 
-The user has explicitly chosen this manual-control model because automatic compaction summarizes opaquely, loses fidelity in unpredictable places, and offers no choice about what survives. The skill's job is to give the user that choice.
+The user has explicitly chosen this manual-control model because automatic compaction summarizes opaquely, loses fidelity in unpredictable places, and offers no choice about what survives. The skill's job is to give the user that choice, and to translate it into the role-aware multi-session architecture they have documented and operate today.
+
+## Progressive disclosure as a three-layer principle
+
+The user generalizes progressive disclosure beyond the classical UX definition. In their operating model, three layers of disclosure run simultaneously:
+
+1. **Within a single session**: skills, memory files, and tool definitions load on demand. A skill description sits in the available-skills list at minimal token cost; full instructions load only when the skill is invoked. This is the layer Anthropic's skill loading documents.
+2. **Across sessions**: bridge files (shared markdown documents in workspace folders) act as the disclosure interface between sessions. One session sees a paragraph summary of what another session did; full session state stays inside its own context. Bridges are bidirectional and asynchronous.
+3. **Within a domain**: role specialization is itself a disclosure pattern. The Architect doesn't carry Power Query lore because the Developer does. The Schema Expert doesn't carry chart formatting expertise because FP&A Modeling does. Each role specializes so no single session is forced to carry the union of all expertise.
+
+This skill operates at layer 2 and layer 3. It detects when the current session is hitting a natural seam, then helps the user produce the right bridge or spawn the right new subordinate.
+
+## The role vocabulary
+
+The user operates a documented multi-session architecture. Use this vocabulary when proposing splits:
+
+- **Manager (parent session)**: holds cross-domain context, holds user intent across topic shifts, decides which subordinate to dispatch to, reviews subordinate output before relaying to the user. The Manager session is the only one that talks to the user directly across topics.
+- **Architect**: designs and reviews implementation work in a specific technical domain. Authors specifications, scoping documents, decision rationales. Does not execute the work directly.
+- **Developer**: takes Architect specifications and implements them. Runs shell commands, executes SQL, writes and tests code, edits production files. Reports back through the bridge.
+- **Coder**: a narrower Developer scope for one-off scripting or prototype iteration. Less ceremony than Developer.
+- **Schema Expert**: maintains canonical reference documents (column inventories, table schemas, helper-table layouts) that other roles consult before acting. Read-mostly; updates on triggers like "user re-exported the production code."
+- **Subordinate specialists**: domain experts (FP&A Projection, FP&A Payroll, Comms Analyst, etc.) that own a piece of the user's life and operate within tightly fenced scope.
+
+When detecting scopes and proposing splits, frame them in this vocabulary. "Spin off as a Developer subordinate for the BI work" lands more usefully than "spin off a sister session."
 
 ## When to fire the alert
 
@@ -16,7 +39,7 @@ Fire when ANY of these conditions are met, but fire each condition only once per
 **Pressure thresholds (estimated context usage).** Rough estimates are fine; absolute precision is not the point. Use your judgment based on visible conversation length, tool result sizes, file reads, and skill loadings.
 
 - Around 50% used: a gentle "midpoint heads-up" alert.
-- Around 65% used: a "consider bifurcating soon" alert.
+- Around 65% used: a "consider dispatching soon" alert.
 - Around 80% used: an "act now to keep control" alert.
 - Around 90% used: a final "auto-compaction is imminent, take action this turn" alert.
 
@@ -32,8 +55,9 @@ Fire when ANY of these conditions are met, but fire each condition only once per
 - A sub-task has clearly completed and the user signals a topic shift ("ok, next", "now let's", "moving on", "different topic").
 - A deliverable has been produced and accepted (a file moved to the workspace, a draft approved, a question answered).
 - The conversation has been ongoing for a while and the next request is a fresh scope.
+- A scope is recognized as Architect-worthy or Developer-worthy and would benefit from dedicated context.
 
-**Explicit invocation.** Fire whenever the user asks about context usage, compaction, session length, bifurcation, or any related topic. In this case, do not wait for natural break points; respond immediately.
+**Explicit invocation.** Fire whenever the user asks about context usage, compaction, session length, bifurcation, sister sessions, subordinate dispatch, or any related topic. In this case, do not wait for natural break points; respond immediately.
 
 ## How to estimate context usage
 
@@ -46,82 +70,24 @@ You do not have a direct token counter, but you can estimate within reasonable b
 
 When alerting, give a rough range, not a false-precise number. For example, "approximately 60 to 70 percent used" is better than "127K tokens used" unless you can actually back that figure up.
 
-## The intervention ladder (progressive disclosure)
+## The intervention ladder
 
-When alerting, do not just offer "continue, checkpoint, or bifurcate" as three flat options. Surface a ladder of six progressively heavier interventions. Recommend the right level for the current pressure and context, but show all levels so the user can override up or down.
+Surface a ladder of six progressively heavier interventions. Recommend the right level for the current pressure and context, but show all levels so the user can override up or down. The heavier levels map to the user's role-aware multi-session architecture.
 
 **Level 0: Continue.** No action. The current session keeps going and accepts whatever automatic compaction does later.
 
-**Level 1: Inline recap.** A 3-to-5 sentence "where we are" recap appended to the response. Not saved externally, not changing the session, just helps the user stay oriented. Useful at the first alert threshold (~50%) so the user has a clean snapshot in their visible scrollback.
+**Level 1: Inline recap.** A 3-to-5 sentence "where we are" recap appended to the response. Not saved externally, not changing the session. Useful at the first alert threshold (~50%) so the user has a clean snapshot in their visible scrollback.
 
-**Level 2: External checkpoint.** A fidelity-preserving summary the user saves outside the session (memory markdown, project notes, scratch file). The current session continues. Useful at a milestone moment when the user wants a recoverable state record but isn't ready to move work elsewhere.
+**Level 2: External checkpoint.** A fidelity-preserving summary the user saves outside the session (memory markdown, project notes, an OPEN_TOPICS append). The current session continues. Useful at a milestone moment when the user wants a recoverable state record but isn't ready to dispatch.
 
-**Level 3: Single bifurcation.** Spin one specific scope off into a sister session via a handoff document. The current session continues with the remaining scope. Useful when one well-defined sub-task is mature enough to live on its own and removing it would meaningfully relieve pressure.
+**Level 3: Dispatch to a subordinate.** Spin one specific scope off into a subordinate session via a bridge file. The current session continues with the remaining scope. The subordinate gets a role assignment (Architect, Developer, Coder, or specialist) appropriate to the work. Useful when one well-defined sub-task has matured enough that it belongs in a dedicated subordinate with its own context budget.
 
-**Level 4: Multi-way split.** The current session is decomposed into a thin parent (or "index session") plus N child sessions, one per major scope. Each child gets its own handoff document; the parent retains only a compact index of what went where, decisions made, and pointers back to children. Useful when several scopes have accumulated and the cleanest answer is to fan them out.
+**Level 4: Multi-way decomposition.** The current session is decomposed into a Manager that retains only cross-domain orchestration plus N subordinates, one per major scope, each with role assignment and bridge file. The Manager keeps a compact index of what went where and which bridges are active. Useful when several scopes have accumulated and the cleanest answer is to fan them out into role-appropriate subordinates.
 
-**Level 5: Full reorganization.** The current session is treated as a "donor session" that's harvested for its valuable artifacts and then retired. A fresh tree of sessions is started in a project, with a new top-level plan. Useful when the session has drifted across so many concerns that no single split pattern saves it.
+**Level 5: Full reorganization.** The current session is treated as a "donor session" that's harvested for its valuable artifacts and then retired. A fresh org chart is started: new Manager, new subordinates spun up against fresh bridge files, OPEN_TOPICS reset. Useful when the session has drifted across so many concerns that no single dispatch saves it.
 
-The levels are not strictly cumulative; the user can also blend (e.g., "give me a Level 1 recap now and a Level 3 bifurcation of the BI thread").
+The levels are not strictly cumulative; the user can blend (e.g., "give me a Level 1 recap now and a Level 3 dispatch to a Developer subordinate for the BI thread").
 
 ## Alert format
 
-Use a compact, scannable structure. The alert should NOT interrupt the work in progress unless pressure is critical; it should be added at the end of the response after answering whatever the user just asked. Format:
-
-```
----
-### Session pressure heads-up
-
-**Estimate**: approximately X% used (rough).
-**Trigger**: [why I am alerting now, in one sentence].
-**Recommended level**: [N - short label]
-
-**Scopes I detect in this session:**
-1. [Scope A: 1-line description]
-2. [Scope B: 1-line description]
-3. [...]
-
-**Your options (lighter to heavier):**
-0. Continue (no action)
-1. Inline recap (orient without changing state)
-2. External checkpoint (save state, keep going)
-3. Bifurcate one scope into a sister session
-4. Multi-way split (thin parent index + N children)
-5. Full reorganization (retire this session, start fresh)
-
-Tell me a level, or name specific scopes to spin off, or say "continue" to dismiss this alert.
----
-```
-
-When pressure is critical (around 90%), drop Level 0 from the options and make the recommendation more directive.
-
-## How to recommend a level
-
-The right level depends on pressure, scope diversity, and where the user is in their work:
-
-- ~50% pressure, single coherent topic, no natural break: recommend **Level 0 or 1**.
-- ~65% pressure, milestone reached, no need to move work: recommend **Level 2**.
-- ~65% pressure, one scope is clearly mature and separable: recommend **Level 3**.
-- ~80% pressure with 3+ distinct scopes in play: recommend **Level 4**.
-- ~90% pressure or session has drifted across many unrelated concerns: recommend **Level 5**.
-
-These are defaults. Override toward the heavier end if scopes have meaningfully different reference data needs (different connectors, projects, files) since that benefits more from separation. Override toward the lighter end if the user has signaled they want to stay focused on the current scope.
-
-## Detecting scopes in the current session
-
-Before producing the alert, scan the visible conversation for distinct work threads. A scope is typically:
-
-- A bounded sub-task with its own subject (e.g., "the BI investigation," "the Zoho MCP setup," "the Zoom AI Companion config")
-- A self-contained deliverable (a skill being built, a document being drafted, a debugging run)
-- A line of inquiry the user pursued separately from others (different topic, different files, different connectors)
-
-Distinguish scopes from tangents. A 2-turn aside is not a scope; a 10-turn sub-investigation is. List the scopes in the alert so the user can reason about which to keep, which to spin off, and which to drop.
-
-## Executing a split (progressive disclosure within Level 3, 4, or 5)
-
-When the user picks a heavy intervention (Level 3, 4, or 5), do not jump straight to producing handoff documents. Walk through these stages so the split is deliberate:
-
-**Stage 1: Scope inventory.** Confirm or refine the scope list. Show the user what you identified and let them rename, merge, split, or remove scopes. Brief: "I see scopes A, B, C, D. Confirm or edit before I propose a split pattern."
-
-**Stage 2: Split proposal.** Recommend which scopes go where:
-- For Level 3: which scope spins off into the child, what s
+Use a compact, scannable stru
