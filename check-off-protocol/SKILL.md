@@ -1,13 +1,13 @@
 ---
 name: check-off-protocol
-description: "Runs the standardized post-integration sequence after the user confirms to a Manager session that they have integrated a Developer subordinate's delivery. Use when the user says 'integrated', 'merged', 'applied', 'it's live', 'live now', 'done', 'checked off', 'pasted it in', or similar, after a Developer has reported a deliverable back through a bridge. Executes four steps: read the Developer's most recent bridge Activity Log entry to identify what was delivered, append the integration to OPEN_TOPICS.md (or the canonical project tracker) with the right version marker, clear or update the relevant bridge's Current Instruction depending on whether the ask is fully or partially resolved, and surface any follow-ups the Developer flagged as open or next-up. Includes criteria for fully resolved versus partial and how to surface follow-ups without re-litigating settled decisions."
+description: "Runs the standardized post-integration sequence after the user confirms to a Manager session that they have integrated a Developer subordinate's delivery. Fire only when BOTH an integration verb and recent Developer bridge activity are present: the user says 'integrated', 'merged in', 'applied', 'deployed', 'live now', 'in production', 'code is live', 'shipped', or 'rolled out' following a Developer's delivery report. Do NOT fire on a bare 'done', 'ok', or 'good' with no integration context. Executes four steps: read the Developer's most recent bridge Activity Log entry to identify what was delivered, append the integration to OPEN_TOPICS.md (or the canonical project tracker) with the right version marker, clear or update the relevant bridge's Current Instruction by resolution state, and surface any follow-ups the Developer flagged. Includes criteria for fully resolved versus partial and how to surface follow-ups without re-litigating settled decisions."
 ---
 
 # Check-off protocol
 
 When the user integrates a Developer subordinate's delivery (in many setups, by manually pasting code into production and confirming in chat), the same housekeeping sequence fires every time. Skipping a step leaves the permanent record out of sync with reality: a bridge that still shows an active ask that is actually done, an OPEN_TOPICS that never recorded the change, a follow-up that the Developer flagged and nobody captured. This skill runs that sequence in a fixed order so nothing is dropped.
 
-The trigger is a user confirmation of integration, not a Developer delivery. The Developer reporting back is *not* the trigger; the user saying "integrated" or "it's live" is. This skill is the Manager-side close-out of a cycle that `architect-to-developer-ask-authoring` opened.
+The trigger requires two things together: an integration verb from the user AND visible recent Developer bridge activity to integrate. The Developer reporting back is *not* the trigger; the user saying "integrated", "merged in", "deployed", "live now", "in production", "code is live", "shipped", or "rolled out" after that delivery is. Do not fire on a bare "done", "ok", or "good" with no integration context, since those are too broad. This skill is the Manager-side close-out of a cycle that `architect-to-developer-ask-authoring` opened.
 
 ## The four-step sequence
 
@@ -93,9 +93,24 @@ Treat as **fully resolved** only when all three hold: scope met in full, no Deve
 ## Anti-patterns to avoid
 
 - Do not fire on a Developer delivery alone. Wait for the user's integration confirmation.
+- Do not fire on a bare "done", "ok", or "good". Require an integration verb plus visible recent Developer activity before running the sequence.
 - Do not assume which T-number was integrated when several are in flight. Ask.
 - Do not clear a Current Instruction that still has remaining work. When in doubt, mark partial.
 - Do not restate the full delivery in OPEN_TOPICS. Record the outcome and point to detail.
 - Do not re-litigate settled decisions under the banner of follow-ups.
 - Do not start follow-up work unprompted. Surface options and let the user choose.
 - Do not use em dashes or AI-tone phrasing in OPEN_TOPICS entries or bridge log entries; these are durable records the user reads.
+
+## Test triggers
+
+Examples that SHOULD fire this skill:
+
+- "I integrated T-041 and it's live in production now." (integration verb plus a recent Developer delivery to close out)
+- "Merged in the Developer's helper refactor and deployed it."
+- "Pasted the new layer into Excel, it's live. Close it out."
+
+Examples that should NOT fire this skill:
+
+- "done" or "ok, looks good" with no integration verb and no recent Developer delivery in view (too broad)
+- "The Developer just delivered the refactor." (a delivery report, not the user's integration confirmation)
+- "Write the OPEN_TOPICS entry for an ask I haven't integrated yet." (no integration has happened)

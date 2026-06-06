@@ -100,3 +100,17 @@ Because the user runs a manual integration step, pre-write the wording the Manag
 ## Writing the ask to the bridge
 
 Place the finished ask in the Current Instruction section of the Architect-to-Developer bridge, replacing the prior instruction (the prior one should already be reflected in the Activity Log and OPEN_TOPICS if resolved). Do not append a new ask below an unresolved one without flagging the collision to the user; the Current Instruction section holds one active ask at a time by convention.
+
+## Test triggers
+
+Examples that SHOULD fire this skill:
+
+- "Write a T-number ask telling the Developer to consolidate the inline TrimOrNull helpers into one shared query."
+- "Scope this refactor for the Developer: replace the per-file date parser with a central one."
+- "Draft the implementation ask for the Architect-to-Developer bridge for the next layer rewrite."
+
+Examples that should NOT fire this skill:
+
+- "Spin up a new Developer session." (that is `bridge-handoff-authoring`; this skill assumes the Developer already exists)
+- "The Developer says the refactor is integrated and live." (that is `check-off-protocol`)
+- "Review my kickoff prompt before launch." (that is `pre-launch-warm-transfer-review`)

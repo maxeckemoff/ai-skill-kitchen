@@ -124,3 +124,17 @@ Save the bridge to the path from Step 2. If other bridges exist and there is an 
 ## Handing off to the reviewer
 
 After producing the kickoff prompt, offer to run it through `pre-launch-warm-transfer-review` before the user launches the session, if that skill is installed. The reviewer checks completeness, tone-rule presence, dataset specificity, and open-question framing, and returns a pass / needs-revision verdict.
+
+## Test triggers
+
+Examples that SHOULD fire this skill:
+
+- "I'm about to spin up a new Developer session for the BI migration. Write me the kickoff prompt and bridge."
+- "Give me a warm-transfer prompt for a new FP&A Payroll specialist subordinate."
+- "Handing this off to a fresh session. Scaffold the subordinate prompt and the initial bridge file."
+
+Examples that should NOT fire this skill:
+
+- "What's the status of the Developer's current task?" (querying an existing session, not standing up a new one)
+- "Review this kickoff prompt before I launch it." (that is `pre-launch-warm-transfer-review`)
+- "Write a T-number ask for the Developer." (that is `architect-to-developer-ask-authoring`; the Developer session already exists)

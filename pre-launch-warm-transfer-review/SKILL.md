@@ -94,3 +94,17 @@ Give a NEEDS REVISION verdict if any category in completeness, tone rules, or da
 - Do not pass a prompt that contains an em dash. That is a hard rule, never advisory.
 - Do not invent the missing dataset paths yourself; flag the gap and ask the user to supply them.
 - Do not pad the review with praise. State pass or flag and move on.
+
+## Test triggers
+
+Examples that SHOULD fire this skill:
+
+- "Here's the kickoff prompt I drafted for the new Developer. Is it ready to launch?"
+- "Review this handoff prompt before I paste it into the new session."
+- "Sanity-check this subordinate prompt for completeness and tone before I send it."
+
+Examples that should NOT fire this skill:
+
+- "Write me a kickoff prompt for a new Developer." (that is `bridge-handoff-authoring`; there is nothing drafted to review yet)
+- "Review this Power Query code for bugs." (a code review, not a kickoff-prompt review)
+- "Did the Developer integrate the last ask?" (that is `check-off-protocol`)
