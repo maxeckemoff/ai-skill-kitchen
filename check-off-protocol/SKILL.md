@@ -15,7 +15,7 @@ Run these in order. Do not skip ahead; each step depends on the previous one.
 
 ### Step 1: Read the Developer's most recent bridge entry
 
-Open the relevant Architect-to-Developer (or Manager-to-Developer) bridge file and read the newest Activity Log entry, plus any the user's confirmation references. Identify:
+Re-read the bridge file from disk now. Do not rely on an in-context copy from earlier in the session; another session (the Developer, a Coder) may have written to it since you last read it, and those entries are what you are here to act on. Open the relevant Architect-to-Developer (or Manager-to-Developer) bridge file and read the newest Activity Log entry, plus any the user's confirmation references. Identify:
 
 - The T-number and title of what was delivered.
 - What actually changed (files, objects, behavior).

@@ -203,7 +203,7 @@ The Manager has set up a bridge file at [path]. Read it now in full. The "Curren
 
 Standing rules to follow: [list explicit rules to load into context immediately].
 
-On session start, read [bridge path] and execute the current instruction.
+On session start, read [bridge path] and execute the current instruction. Before answering any later status, review, or check-off request, re-read the bridge from disk first; other sessions may have written to it since your last read, and those changes are not in your context until you re-read.
 ```
 
 ## Producing a Manager-side index (for Level 4)

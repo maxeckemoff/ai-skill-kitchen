@@ -76,6 +76,8 @@ Standing rules to follow immediately:
 Expected first response: [what to produce or confirm on turn 1 so the Manager knows the handoff landed].
 
 On session start: read [bridge path] and execute the Current Instruction. If anything is ambiguous, append to Open Questions and stop rather than guessing.
+
+Bridge freshness: before you answer any later status, review, or check-off request, re-read this bridge from disk first (top of the Activity Log and the Current Instruction). Other sessions may have written to it since your last read, and those changes are not in your context until you re-read. Do not answer from an in-context snapshot.
 ```
 
 After the kickoff prompt, give the user the rename step so the sidebar matches the embedded identity:
@@ -94,7 +96,7 @@ After the kickoff prompt, give the user the rename step so the sidebar matches t
 
 Two classes of standing rules exist. Put them in the right place.
 
-**Propagating rules** apply to every session the user runs. These live in user-level auto-memory and propagate to sessions launched in the same workspace, so you do not need to restate them in every bridge. Examples: no em dashes, no obvious AI tone, fact-check load-bearing claims, ask before guessing when stakes are high. Mention in the kickoff that these apply, but the bridge's Standing Rules section should not be padded with them.
+**Propagating rules** apply to every session the user runs. These live in user-level auto-memory and propagate to sessions launched in the same workspace, so you do not need to restate them in every bridge. Examples: no em dashes, no obvious AI tone, fact-check load-bearing claims, ask before guessing when stakes are high, and bridge freshness (re-read the bridge from disk before answering a status, review, or check-off request rather than trusting an in-context snapshot). Mention in the kickoff that these apply, but the bridge's Standing Rules section should not be padded with them.
 
 **Scope-specific rules** apply only to this subordinate's domain. These belong in the bridge's Standing Rules section. Examples: a file-edit protocol for one project, a versioning convention for one set of files, a defensive-coding pattern for one engine, a refresh cadence for one model.
 

@@ -25,6 +25,7 @@ A complete kickoff prompt contains:
 - **Standing rules**: the rules to load immediately.
 - **Expected first response**: what the subordinate produces or confirms on turn 1.
 - **Start instruction**: read the bridge, execute the Current Instruction, surface ambiguity to Open Questions rather than guessing.
+- **Bridge freshness instruction**: the prompt tells the session to re-read the bridge from disk before answering a later status, review, or check-off request, rather than trusting an in-context snapshot. Flag its absence; this prevents the session from acting on a stale picture after other sessions write to the bridge.
 
 Flag any missing element. Missing dataset orientation and missing expected-first-response are the two most common and most damaging omissions.
 
