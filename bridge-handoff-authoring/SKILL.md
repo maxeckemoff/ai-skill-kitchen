@@ -27,6 +27,16 @@ Before writing anything, decide what role the new subordinate should hold. Ask t
 
 If the scope does not clearly recur, flag that a subordinate may be overkill and a one-off in the current session might be cheaper. The launch overhead only pays back for scopes that recur and accumulate expertise.
 
+## Step 1b: Assign the sidebar identity code
+
+Every subordinate needs a stable identity so the org chart stays legible in the session list and so the session knows who it is and who it talks to. Assign a short PROJECT-ROLE code plus a task name.
+
+- **Code format**: `PROJECT-ROLE`, uppercase and hyphenated. The project part is a short abbreviation of the project or org group; the role part abbreviates the role from Step 1. Examples: `VAT-DEV` (Maintain VAT Engine, Developer), `VAT-ARCH` (Architect), `GCP-DEV` (Deploy GCP BI Suite, Developer), `FPA-PROJ-ENG` (FP&A Projection, Engineer), `SKL-BLD` (Skill Builder). Keep it short enough to read at a glance.
+- **Sidebar label**: `CODE - short task name`, for example `VAT-DEV - consolidate TrimOrNull helpers`. The code leads so sessions scan and sort by identity.
+- Derive the code from session context (the project plus the role from Step 1). If the project abbreviation is not obvious, ask the user or check the session registry.
+
+A note on mechanism: a Cowork session's sidebar label is set by the user, not by the session itself. As of this writing a session cannot reliably rename its own sidebar entry from its first prompt; if that capability is confirmed later, this skill can lean on it. So this skill does two things instead: it embeds the identity code inside the kickoff prompt (so the session knows its own ID and signs bridge entries with it), and it gives the user a copy-pastable rename instruction for the sidebar label.
+
 ## Step 2: Gather the orientation inputs
 
 A good kickoff prompt is concrete. Collect (or ask the user for) these before drafting:
@@ -45,9 +55,9 @@ If any of these are missing and you cannot infer them, ask the user rather than 
 Produce a paste-ready prompt in this shape. Fill every bracket; delete any line that genuinely does not apply rather than leaving an empty placeholder.
 
 ```
-You are the [role] subordinate for [scope description].
+You are [CODE], the [role] subordinate for [scope description].
 
-The Manager has set up a bridge file at [bridge path]. Read it now in full. The "Current Instruction" section is your active ask. Append timestamped entries to "Activity Log" (newest at top, signed [role name]). Surface decisions you need from the Manager to "Open Questions". Treat "Standing Rules" as load-bearing.
+The Manager has set up a bridge file at [bridge path]. Read it now in full. The "Current Instruction" section is your active ask. Append timestamped entries to "Activity Log" (newest at top, signed [CODE]). Surface decisions you need from the Manager to "Open Questions". Treat "Standing Rules" as load-bearing.
 
 Scope: [the one bounded responsibility this session owns; what is explicitly out of scope].
 
@@ -67,6 +77,10 @@ Expected first response: [what to produce or confirm on turn 1 so the Manager kn
 
 On session start: read [bridge path] and execute the Current Instruction. If anything is ambiguous, append to Open Questions and stop rather than guessing.
 ```
+
+After the kickoff prompt, give the user the rename step so the sidebar matches the embedded identity:
+
+> Rename the new session's sidebar label to: `[CODE] - [short task name]`
 
 ### Role-specific kickoff tailoring
 

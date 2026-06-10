@@ -4,15 +4,16 @@ A small, growing collection of LLM agent skills and shared markdowns that I've b
 
 ## What's inside
 
-These five skills form a toolkit for operating a multi-session Cowork architecture, where one human dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files.
+These six skills form a toolkit for operating a multi-session Cowork architecture, where one human dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files.
 
 | Skill | What it does | Status |
 |---|---|---|
 | [cowork-progressive-disclosure-helper](./cowork-progressive-disclosure-helper) | Alerts Cowork sessions on context pressure and walks you through a 6-level intervention ladder (recap, checkpoint, dispatch, multi-way split, full reorganization) before automatic compaction takes over. Decides when a scope is ready to split off. | Released |
-| [bridge-handoff-authoring](./bridge-handoff-authoring) | Scaffolds the warm-transfer kickoff prompt and initial bridge file for a new subordinate session: role assignment, scope, dataset orientation, recipes, standing rules, expected first response. | Released |
+| [bridge-handoff-authoring](./bridge-handoff-authoring) | Scaffolds the warm-transfer kickoff prompt and initial bridge file for a new subordinate session: role assignment, sidebar identity code, scope, dataset orientation, recipes, standing rules, expected first response. | Released |
 | [architect-to-developer-ask-authoring](./architect-to-developer-ask-authoring) | Turns a freeform description into a structured, ticket-numbered implementation ask in the bridge: scope, semantic constraints, in/out-of-scope files, deliverable format, pre-written tracker update. | Released |
 | [pre-launch-warm-transfer-review](./pre-launch-warm-transfer-review) | Reviews a drafted kickoff prompt before launch across five categories (completeness, tone rules, dataset specificity, open-question framing, standing-rules clarity) and returns a pass / needs-revision verdict. | Released |
 | [check-off-protocol](./check-off-protocol) | Runs the post-integration close-out after you confirm a delivery is live: read the bridge entry, log to the project tracker, clear or update the bridge ask, surface follow-ups. | Released |
+| [skill-extraction-spotter](./skill-extraction-spotter) | Watches an active session for work worth codifying as a reusable skill, then surfaces a short recommendation with sketched SKILL.md frontmatter and hands an accepted candidate to skill-creator. | Released |
 
 More to come. The intent is to expand this kitchen over time with skills, prompts, and patterns that have earned their keep in real work.
 

@@ -10,13 +10,9 @@ This skill flips the model: you stay informed about pressure and choose what to 
 
 ## What progressive disclosure means here
 
-The skill generalizes progressive disclosure beyond its classical UX definition. Three layers operate simultaneously:
+Progressive disclosure in this skill's operating model means the deliberate practice of splitting work into delineated "virtual employees" (Manager, Architect, Developer, Coder, Schema Expert, Subordinate specialists), each with its own Cowork session and context budget, coordinating through shared markdown files called bridges. It is NOT in-session iteration in a single chat. Iterating turn by turn in one window is the baseline use of Claude AI; progressive disclosure is the architecture that comes after you have outgrown the single window and started running an org chart.
 
-1. **Within a session**: skills, memory files, and tool definitions load on demand.
-2. **Across sessions**: bridge files act as the disclosure interface between sessions.
-3. **Within a domain**: role specialization (Architect, Developer, Schema Expert, etc.) so no single session carries the union of all expertise.
-
-The skill operates at layers 2 and 3, helping you produce the right bridge or spawn the right new subordinate when a scope is ready to leave the current session.
+Two finer-grained disclosure mechanics also operate within this pattern (skills and memory load on demand inside any one session; role specialization means no single session carries the union of all expertise). But the load-bearing meaning is the virtual-employee orchestration via bridges. This skill is the operating-system level helper for that practice.
 
 ## The role vocabulary
 
@@ -45,4 +41,61 @@ You can also invoke it explicitly by asking about context, compaction, session l
 
 **Level 2: External checkpoint.** A structured state summary you save outside the session (memory markdown, OPEN_TOPICS append, project notes). The work continues in place. Best at milestone moments.
 
-**Level 3: Dispatch to a subordinate.** One scope spins off into a role-assigned su
+**Level 3: Dispatch to a subordinate.** One scope spins off into a role-assigned subordinate session (Architect, Developer, Coder, or specialist) via a bridge file in the documented format. The current session continues. Best when one sub-task has matured enough to belong in dedicated context.
+
+**Level 4: Multi-way decomposition.** The session decomposes into a Manager that retains only cross-domain orchestration plus N role-assigned subordinates, each with their own bridge file. The Manager keeps a compact index. Best when several scopes have accumulated.
+
+**Level 5: Full reorganization.** The current session becomes donor material. A fresh org chart is started with a new Manager and initial subordinates spun up against fresh bridges. Best when the session has drifted across many concerns.
+
+You can blend levels (e.g., "Level 1 recap now plus Level 3 dispatch to a Developer for the BI thread").
+
+## Bridge file format
+
+The skill produces bridge files in the user's documented convention:
+
+```markdown
+# Bridge: [Manager session name] <-> [Subordinate role and scope]
+
+## Current Instruction
+[The one active ask the subordinate works on next.]
+
+## Activity Log
+[Newest at top, signed by author with [Manager] or [Subordinate role name].]
+
+## Open Questions
+[Subordinate appends here when needing a Manager decision.]
+
+## Standing Rules
+[Accumulated scope-specific decisions and conventions.]
+
+## Canonical Sources
+[Pointers to permanent reference docs.]
+```
+
+## Progressive disclosure within splits
+
+When you pick Level 3, 4, or 5, the skill walks you through four stages rather than jumping straight to producing documents:
+
+1. **Scope inventory**: confirm or refine the list of scopes detected.
+2. **Dispatch proposal**: which scopes go where, what roles each subordinate gets.
+3. **Refinement**: you adjust roles, merge or drop, add subordinates.
+4. **Execute**: bridge files produced, plus Manager-side index for Level 4, plus kickoff messages for new subordinates.
+
+## Sibling skills
+
+This skill is one of several in a multi-session architecture toolkit:
+
+- `bridge-handoff-authoring`: scaffolds the warm-transfer kickoff prompt
+- `architect-to-developer-ask-authoring`: produces T-number-style asks in the documented format
+- `pre-launch-warm-transfer-review`: reviews a warm-transfer prompt before launch
+- `check-off-protocol`: standardizes post-integration sequence
+
+If those skills are installed, this skill defers to them for deeper work in their domains.
+
+## Suspending alerts
+
+If you want to handle context manually without further alerts, say "stop alerting me" or "I'll handle context" and the skill will suspend for the rest of the session.
+
+## Compatibility
+
+Works in any Cowork session. No external dependencies, no scripts, no API calls. The skill is purely instructions for how Claude should monitor, alert, and produce bridge artifacts.
