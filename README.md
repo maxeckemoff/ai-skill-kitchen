@@ -4,16 +4,21 @@ A small, growing collection of LLM agent skills and shared markdowns that I've b
 
 ## What's inside
 
-These six skills form a toolkit for operating a multi-session Cowork architecture, where one human dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files.
+These eleven skills form a toolkit for operating a multi-session Cowork architecture, where one human dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files.
 
 | Skill | What it does | Status |
 |---|---|---|
-| [cowork-progressive-disclosure-helper](./cowork-progressive-disclosure-helper) | Alerts Cowork sessions on context pressure and walks you through a 6-level intervention ladder (recap, checkpoint, dispatch, multi-way split, full reorganization) before automatic compaction takes over. Decides when a scope is ready to split off. | Released |
-| [bridge-handoff-authoring](./bridge-handoff-authoring) | Scaffolds the warm-transfer kickoff prompt and initial bridge file for a new subordinate session: role assignment, sidebar identity code, scope, dataset orientation, recipes, standing rules, expected first response. | Released |
-| [architect-to-developer-ask-authoring](./architect-to-developer-ask-authoring) | Turns a freeform description into a structured, ticket-numbered implementation ask in the bridge: scope, semantic constraints, in/out-of-scope files, deliverable format, pre-written tracker update. | Released |
-| [pre-launch-warm-transfer-review](./pre-launch-warm-transfer-review) | Reviews a drafted kickoff prompt before launch across five categories (completeness, tone rules, dataset specificity, open-question framing, standing-rules clarity) and returns a pass / needs-revision verdict. | Released |
-| [check-off-protocol](./check-off-protocol) | Runs the post-integration close-out after you confirm a delivery is live: read the bridge entry, log to the project tracker, clear or update the bridge ask, surface follow-ups. | Released |
-| [skill-extraction-spotter](./skill-extraction-spotter) | Watches an active session for work worth codifying as a reusable skill, then surfaces a short recommendation with sketched SKILL.md frontmatter and hands an accepted candidate to skill-creator. | Released |
+| [cowork-progressive-disclosure-helper](./cowork-progressive-disclosure-helper) | Alerts Cowork sessions on context pressure and walks you through a 6-level intervention ladder before automatic compaction. Decides when a scope is ready to split off. | Released |
+| [bridge-handoff-authoring](./bridge-handoff-authoring) | Scaffolds the warm-transfer kickoff prompt and initial bridge for a new subordinate session, including a sidebar identity code. | Released |
+| [pre-launch-warm-transfer-review](./pre-launch-warm-transfer-review) | Reviews a drafted kickoff prompt before launch across five categories and returns a pass / needs-revision verdict. | Released |
+| [architect-to-developer-ask-authoring](./architect-to-developer-ask-authoring) | Turns a freeform description into a structured, ticket-numbered implementation ask in the bridge. | Released |
+| [check-off-protocol](./check-off-protocol) | Runs the post-integration close-out after you confirm a delivery is live: log it, clear or update the bridge ask, surface follow-ups. | Released |
+| [bridge-relocation-shell](./bridge-relocation-shell) | Relocates a bridge or handoff set to a new folder, leaving identity-confirm forwarding shells, with a CHECK-FIRST pass that flags write-targets before shelling. | Released |
+| [session-rename-helper](./session-rename-helper) | Composes a sidebar label per the Identity Convention and gives the rename click-path, or a batch-rename Coder MD. | Released |
+| [versioned-in-place](./versioned-in-place) | Revises a durable doc in place: new version on top, prior versions kept below in a SUPERSEDED block. | Released |
+| [skill-extraction-spotter](./skill-extraction-spotter) | Watches a session for recurring work worth codifying as a skill and sketches a candidate, then hands it to skill-creator. | Released |
+| [skill-install-sync](./skill-install-sync) | Diffs the local Kitchen against the skills loaded in a session and reports install, update, and stale candidates with actions. | Released |
+| [usage-check-on-prompt](./usage-check-on-prompt) | Reports a compact Claude session and weekly usage line via the claude-usage MCP, at session start and on request. | Released |
 
 More to come. The intent is to expand this kitchen over time with skills, prompts, and patterns that have earned their keep in real work.
 
