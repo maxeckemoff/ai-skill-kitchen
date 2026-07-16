@@ -19,7 +19,7 @@ A per-session watch-list, not one global list. Each entry:
 - `throttle_minutes`: per-source recheck throttle (default 10; `0` means check every prompt).
 - `content_diff`: opt-in boolean; when true, on a change also fetch a one-line what-changed. Default false (trigger-only).
 
-The VATR pilot fixture (three sources, from the SKL-VATR bridge) exercises both access paths: two Drive Docs (`1IBt0H_bo8NMfaJ9RWpRaAKmneeKwnauS8qFQM6CgQcc`, `1cv0fWDu9zu9-y4bew8AmQUVaDTCoSXhvj7aHTYUwj8Y`) and one local file (`Maintain VAT Engine\_plans\handoff\Jurisdiction_Tax_Canon.md`). Set the VATR sources to `throttle_minutes: 0` so they behave as the live pre-flight does today.
+A representative pilot fixture (three sources) exercises both access paths: two Drive Docs (by file ID, elided here as `DRIVE_DOC_ID_A` and `DRIVE_DOC_ID_B`) and one local file (a project handoff `.md` referenced by full path). Set the near-deadline sources to `throttle_minutes: 0` so they behave as a live pre-flight does today.
 
 ## The change signal (cheap trigger, lazy content)
 

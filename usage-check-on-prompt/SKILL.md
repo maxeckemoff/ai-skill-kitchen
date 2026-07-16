@@ -5,7 +5,7 @@ description: "Reports current Claude usage as a compact one-line status by calli
 
 # Usage check on prompt
 
-This skill gives Max ambient awareness of his Claude usage without opening the tray app: a single compact line at session start, and on demand when he asks. It reads usage through the `get_claude_usage` MCP tool and never does anything but report.
+This skill gives the Human Orchestrator ambient awareness of Claude usage without opening the tray app: a single compact line at session start, and on demand when they ask. It reads usage through the `get_claude_usage` MCP tool and never does anything but report.
 
 ## Dependency: the claude-usage MCP
 

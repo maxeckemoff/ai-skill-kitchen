@@ -8,8 +8,8 @@ The multi-session substrate is pull-based: files do not push, sessions act only 
 
 ## What it produces
 
-1. **Response-tail baton** (standing rule): every response ends with one of three forms, `Next prompt:` (a named target plus a paste-ready block), `Decision needed: ... [Max]`, or `Thread terminal: #codename DONE`.
-2. **Bridge baton**: when the sender can write the target's bridge, the baton is written into the target's Current Instruction, so the receiver picks it up on its bridge-freshness re-read and Max's paste shrinks to "check your bridge." Without write access, the tail carries it.
+1. **Response-tail baton** (standing rule): every response ends with one of three forms, `Next prompt:` (a named target plus a paste-ready block), `Decision needed: ... [Human Orchestrator]`, or `Thread terminal: #codename DONE`.
+2. **Bridge baton**: when the sender can write the target's bridge, the baton is written into the target's Current Instruction, so the receiver picks it up on its bridge-freshness re-read and the Human Orchestrator's paste shrinks to "check your bridge." Without write access, the tail carries it.
 3. **Fan-out sequences** (the PQREV pattern): numbered, dependency-ordered, parallel-safe steps marked, one block per target with the send order stated.
 
 Plus an optional **thread-tag-hygiene lint** that flags bridge entries missing their `#codename`, folded in as a step rather than a separate skill.

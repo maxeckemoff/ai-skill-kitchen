@@ -1,6 +1,6 @@
 ---
 name: relay-baton
-description: "Produces the ThreadOps relay artifacts that pass next-action state between Cowork sessions. Use when a session finishes work another session must pick up, or the user says write the baton, hand this off, relay to the next session, emit the next-prompt tail, or fan this out. Three behaviors: (1) the standing response-tail baton in one of three forms (Next prompt with a paste-ready block for a named target session; Decision needed for Max; or Thread terminal marking a codename done); (2) bridge batons written into the target session's Current Instruction when the sender has write access, otherwise handed to Max via the tail; (3) PQREV-style fan-out sequences, numbered and dependency-ordered, one block per target with send order stated and the thread codename on every block. Includes an optional thread-tag-hygiene lint step that flags bridge entries missing their codename."
+description: "Produces the ThreadOps relay artifacts that pass next-action state between Cowork sessions. Use when a session finishes work another session must pick up, or the user says write the baton, hand this off, relay to the next session, emit the next-prompt tail, or fan this out. Three behaviors: (1) the standing response-tail baton in one of three forms (Next prompt with a paste-ready block for a named target session; Decision needed for the Human Orchestrator; or Thread terminal marking a codename done); (2) bridge batons written into the target session's Current Instruction when the sender has write access, otherwise handed to the Human Orchestrator via the tail; (3) PQREV-style fan-out sequences, numbered and dependency-ordered, one block per target with send order stated and the thread codename on every block. Includes an optional thread-tag-hygiene lint step that flags bridge entries missing their codename."
 ---
 
 # Relay baton
@@ -18,20 +18,20 @@ Every tracked cross-session thread has a codename: `#PROJECT_TopicCamelCase` (fo
 End the response with exactly one of these three forms:
 
 - `Next prompt: [TARGET-ID] #CODENAME` followed by a paste-ready block the user can drop straight into the target session.
-- `Decision needed: <what is being decided> [Max]` when the next step is a human judgment call.
+- `Decision needed: <what is being decided> [Human Orchestrator]` when the next step is a human judgment call.
 - `Thread terminal: #CODENAME DONE, notify register` when the thread is finished.
 
 The paste-ready block under a Next prompt is a complete instruction the target can act on without hunting for context: what to do, the concrete inputs (paths, IDs), and the expected deliverable. One tail per response; if several threads advanced, lead with the most urgent and note the others.
 
 ## Behavior 2: the bridge baton
 
-When the sender has write access to the target's bridge, do not just hand the baton to Max, ALSO write it into the target's `## Current Instruction` section. The receiving session picks it up on its bridge-freshness re-read (see the bridge-freshness rule), so Max's paste shrinks to "check your bridge." Steps:
+When the sender has write access to the target's bridge, do not just hand the baton to the Human Orchestrator, ALSO write it into the target's `## Current Instruction` section. The receiving session picks it up on its bridge-freshness re-read (see the bridge-freshness rule), so the Human Orchestrator's paste shrinks to "check your bridge." Steps:
 
 1. Confirm write access to the target bridge and its path.
 2. Replace the target's Current Instruction with the baton: the paste-ready ask, tagged with `#CODENAME`, signed by the sender with the date.
-3. In the response tail, point Max at it: `Next prompt: [TARGET-ID] #CODENAME - baton written to its bridge Current Instruction; tell it to re-read its bridge.`
+3. In the response tail, point the Human Orchestrator at it: `Next prompt: [TARGET-ID] #CODENAME - baton written to its bridge Current Instruction; tell it to re-read its bridge.`
 
-Where no write access to the target bridge exists, the response tail carries the full baton block for Max to paste directly. Never leave a baton only in your own head or buried mid-response.
+Where no write access to the target bridge exists, the response tail carries the full baton block for the Human Orchestrator to paste directly. Never leave a baton only in your own head or buried mid-response.
 
 ## Behavior 3: fan-out sequences (the PQREV pattern)
 
@@ -51,7 +51,7 @@ Send order: 1, then 2 and 3 in parallel, then 4
    <paste-ready block>
 ```
 
-State dependencies explicitly so Max knows what can fire now and what waits. Mark which steps are parallel-safe. Every block carries the codename.
+State dependencies explicitly so the Human Orchestrator knows what can fire now and what waits. Mark which steps are parallel-safe. Every block carries the codename.
 
 ## Optional step: thread-tag-hygiene lint
 
@@ -67,10 +67,10 @@ When asked to check tag hygiene, or before a register sweep, scan recent bridge 
 
 - Do not omit the codename from a baton or fan-out block; untagged threads fall out of `rg` reconstruction.
 - Do not bury the next action mid-response; it goes in the tail (and the target bridge when possible).
-- Do not write a bridge baton into a target you lack write access to; hand it to Max via the tail instead.
+- Do not write a bridge baton into a target you lack write access to; hand it to the Human Orchestrator via the tail instead.
 - Do not silently rewrite bridge entries during the lint; propose the codename additions.
 - Do not emit a fan-out without stating dependencies and send order; an unordered list is not a relay.
-- Do not use em dashes or AI-tone phrasing in batons or tails; they are artifacts Max and other sessions read.
+- Do not use em dashes or AI-tone phrasing in batons or tails; they are artifacts the Human Orchestrator and other sessions read.
 
 ## Test triggers
 
