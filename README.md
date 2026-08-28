@@ -59,7 +59,16 @@ If you want to read or modify a skill before installing, the source (`SKILL.md`,
 
 ## Contributing or forking
 
-Each skill is independent. Fork the repo, modify the skill folder you care about, repackage with your preferred tooling, and use. If you build improvements that are broadly useful, pull requests are welcome.
+Each skill is independent. Fork the repo, modify the skill folder you care about, repackage with your preferred tooling, and use.
+
+Pull requests are welcome and go through a plain review before merge, the way any small open-source repo should be handled:
+
+- No PR is merged unread. Every changed file gets opened and read, not diffed-and-skimmed, before merge, specifically for anything that reaches outside the repo (network calls, shell commands, credential handling) or that does not match what the PR description says it does.
+- `scripts/quick_validate.py` (in the `skill-creator` skill, or your own equivalent) runs on every skill folder before merge: valid frontmatter, kebab-case name, no stray executable bundled without explanation.
+- Contributions that add a bundled script or binary get the most scrutiny. A markdown-only change (a new SKILL.md section, a reference file, a corrected claim) is inherently lower risk than one that adds code.
+- For `chrome-field-practice` specifically: field observations do not need a PR at all. Open an issue with the MEASURED or INFERRED tag, what was observed, and how to reproduce it. Corroborated findings get folded into the skill directly by the maintainer, following the promotion rule described in the skill itself.
+
+This is a hobby-scale project maintained by one person, not a security team, so Anthropic's own guidance, install skills only from trusted sources, still applies. Read what you install.
 
 ## License
 
