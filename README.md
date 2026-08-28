@@ -6,7 +6,7 @@ For the pattern these skills implement, see [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ## What's inside
 
-These fifteen skills form a toolkit for operating a multi-session Cowork architecture, where one human orchestrator dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files. They are grouped by role below.
+These sixteen skills form a toolkit for operating a multi-session Cowork architecture, where one human orchestrator dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files, plus a growing set of tool-specific field practice skills for the concrete tools those sessions use day to day. They are grouped by role below.
 
 ### Core multi-session orchestration
 
@@ -29,6 +29,12 @@ These fifteen skills form a toolkit for operating a multi-session Cowork archite
 | [bounded-source-interrogation](./bounded-source-interrogation) | Profiles a large external source (big Sheet, export, COQL pull) for structure, counts, and a sample without loading it whole, to prevent context saturation. | Released |
 | [live-source-watch](./live-source-watch) | Watches a per-session list of Drive docs, URLs, and local files by modifiedTime / mtime / hash and surfaces only the deltas as a one-line heads-up. | Released |
 | [usage-check-on-prompt](./usage-check-on-prompt) | Reports a compact Claude session and weekly usage line via the claude-usage MCP, at session start and on request. | Released |
+
+### Tool-specific field practice
+
+| Skill | What it does | Status |
+|---|---|---|
+| [chrome-field-practice](./chrome-field-practice) | Field-tested diagnostics for browser automation with Claude in Chrome: a tab-visibility precheck, an ordered diagnosis ladder for a click that does nothing, and the discipline of tagging every claim MEASURED or INFERRED so a guess never quietly becomes a rule. | Released |
 
 ### Meta (skills about the kitchen itself)
 
