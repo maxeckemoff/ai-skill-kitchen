@@ -78,6 +78,8 @@ Expected first response: [what to produce or confirm on turn 1 so the Manager kn
 On session start: read [bridge path] and execute the Current Instruction. If anything is ambiguous, append to Open Questions and stop rather than guessing.
 
 Bridge freshness: before you answer any later status, review, or check-off request, re-read this bridge from disk first (top of the Activity Log and the Current Instruction). Other sessions may have written to it since your last read, and those changes are not in your context until you re-read. Do not answer from an in-context snapshot.
+
+ThreadOps: read `AI Org Chart\ThreadOps_Canon.md` once this session: batons, ledgers, seat stanzas, escalation. (Or the versioned copy in this project's `_TaskLogs\ThreadOps_Canon_COPY.md` if AI Org Chart is unmounted.)
 ```
 
 After the kickoff prompt, give the user the rename step so the sidebar matches the embedded identity:
@@ -126,6 +128,8 @@ If the bridge file the kickoff points to does not yet exist, scaffold it in the 
 ```
 
 Seed the Current Instruction with the first ask, the Standing Rules with the scope-specific rules from Step 4, and the Canonical Sources with the concrete paths from Step 2. Leave Activity Log and Open Questions empty for the subordinate to fill.
+
+**Multi-lane scopes** (the thread this bridge carries spans more than one lane or session): add a seat-stanza line to Standing Rules declaring who is Accountable (exactly one seat), Responsible, Validator (if one exists), Consulted, and Informed (Max defaults to I), per the canon's Seats and escalation section. Cross-lane asks route to the A seat, never to its subordinates; the escalation ladder where no stanza exists is R to A, A to V where one exists, then Max. Skip this for a single-lane bridge; a seat stanza with one seat in every column is noise.
 
 Save the bridge to the path from Step 2. If other bridges exist and there is an index (`_plans/handoff/_INDEX.md` or similar), offer to add a one-line entry for the new bridge.
 
