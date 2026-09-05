@@ -6,7 +6,7 @@ For the pattern these skills implement, see [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ## What's inside
 
-These sixteen skills form a toolkit for operating a multi-session Cowork architecture, where one human orchestrator dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files, plus a growing set of tool-specific field practice skills for the concrete tools those sessions use day to day. They are grouped by role below.
+These seventeen skills form a toolkit for operating a multi-session Cowork architecture, where one human orchestrator dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files, plus a growing set of tool-specific field practice and execution-convention skills for the concrete tools those sessions use day to day. They are grouped by role below.
 
 ### Core multi-session orchestration
 
@@ -43,6 +43,12 @@ These sixteen skills form a toolkit for operating a multi-session Cowork archite
 | [skill-extraction-spotter](./skill-extraction-spotter) | Watches a session for recurring work worth codifying as a skill and sketches a candidate, then hands it to skill-creator. | Released |
 | [skill-install-sync](./skill-install-sync) | Diffs the local Kitchen against the skills loaded in a session and reports install, update, and stale candidates with actions. | Released |
 | [versioned-in-place](./versioned-in-place) | Revises a durable doc in place: new version on top, prior versions kept below in a SUPERSEDED block. | Released |
+
+### Execution conventions
+
+| Skill | What it does | Status |
+|---|---|---|
+| [stunt-double-apply](./stunt-double-apply) | Runs a sanctioned write-mode (`--apply`) script past the auto-mode permission classifier using a fixed stand-in name the human orchestrator has already approved in their own settings. | Released |
 
 More to come. The intent is to expand this kitchen over time with skills, prompts, and patterns that have earned their keep in real work.
 
