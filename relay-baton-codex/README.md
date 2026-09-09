@@ -4,7 +4,7 @@ This package adds a portable Codex skill for task handoffs and native FULL sessi
 
 Installing the skill gives Codex the capability when the skill is selected. It does not force a signature onto every task. The installer offers a separate, explicit opt-in for a global `~/.codex/AGENTS.md` instruction.
 
-FULL signatures provide the complete diagnostic record, but their output also becomes later context. The recipient can explicitly request CONDENSED signatures for routine work and FULL when the detailed prompt and usage table is useful. The optional global rule remains FULL unless the recipient later chooses a different policy. Cache lifetime is separate from plan reset windows; dummy keep-alive turns consume usage and this package makes no cache-retention promise.
+FULL signatures provide every diagnostic section, but their output also becomes later context. Prompt rows therefore default to the intersection of the last 24 hours and newest 20 native prompt runs. Cumulative metrics still use the full observed record and prompt numbers do not change. The recipient can explicitly request CONDENSED signatures for routine work or say `relay-baton-codex full-history` to show every prompt row on the next reply only. That phrase is skill routing, not a built-in Codex slash command or a persistent setting. The optional global rule remains FULL unless the recipient later chooses a different policy. Cache lifetime is separate from plan reset windows; dummy keep-alive turns consume usage and this package makes no cache-retention promise.
 
 ## Requirements
 
@@ -45,6 +45,14 @@ python "$HOME/.agents/skills/relay-baton-codex/scripts/codex_session_signature.p
 ```
 
 If task-ID environment variables are unavailable, add `--session <your-native-Codex-task-UUID>`. Do not use somebody else's task ID or copied metrics.
+
+For one invocation with every prompt row:
+
+```powershell
+python "$HOME/.agents/skills/relay-baton-codex/scripts/codex_session_signature.py" --seat "MY-SEAT" --full-history
+```
+
+The following invocation returns to the bounded default when `--full-history` is omitted.
 
 ## Privacy and scope
 

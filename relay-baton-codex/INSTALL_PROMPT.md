@@ -11,7 +11,7 @@ After I choose, run relay-baton-codex/install.py with the matching option. Prese
 
 Run relay-baton-codex/scripts/test_codex_session_signature.py using synthetic fixtures. Then run the installed generator against this task's own native Codex ID, using a short seat label I choose, and explain its output. Report the installed path, whether global instructions were enabled, test results, and any tzdata requirement.
 
-Orient me briefly to: FULL versus explicitly requested CONDENSED signatures; the DRAFTED, EMITTED, DELIVERED, SUPERSEDED, and STALE baton lifecycle; why cache behavior, plan allowance windows, and current context occupancy are separate; why provider credit units and Standard API benchmarks are not billed spend; and when CONDENSED is more efficient for routine work. Do not promise that dummy pings preserve cache or save usage.
+Orient me briefly to: FULL versus explicitly requested CONDENSED signatures; the default prompt-row intersection of last 24 hours and newest 20; the exact `relay-baton-codex full-history` phrase that expands the next reply only; why that phrase is skill routing rather than a built-in slash command; the DRAFTED, EMITTED, DELIVERED, SUPERSEDED, and STALE baton lifecycle; why cache behavior, plan allowance windows, and current context occupancy are separate; why provider credit units and Standard API benchmarks are not billed spend; and when CONDENSED is more efficient for routine work. Confirm that cumulative metrics and original prompt numbers do not change when display rows are bounded. Do not promise that dummy pings preserve cache or save usage.
 
 Do not use another person's task ID, copy their metrics, change unrelated Codex configuration, or send/publish anything.
 ```

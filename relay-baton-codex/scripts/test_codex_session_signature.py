@@ -1,5 +1,11 @@
 """Hand-computed controls, including replay, cache subsets and context denominator."""
+import datetime as dt
+import json
+import subprocess
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 from codex_session_signature import analyse, benchmark, load_rows, plan_line, render
 
 
@@ -19,7 +25,103 @@ def prefix():
             event('turn_context', turn_id='t1', model='gpt-6-astra', effort='medium')]
 
 
+def prompt_group(turn, when):
+    start = event('event_msg', type='task_started', turn_id=turn)
+    start['timestamp'] = when.isoformat().replace('+00:00', 'Z')
+    record = usage(turn, turn=turn)
+    record['timestamp'] = start['timestamp']
+    return [start, record]
+
+
 class SignatureTests(unittest.TestCase):
+    def test_cli_full_history_flag_overrides_only_that_invocation(self):
+        now = dt.datetime.now(dt.timezone.utc)
+        rows = prefix()
+        for n in range(1, 22):
+            rows += prompt_group(f't{n}', now - dt.timedelta(minutes=22-n))
+        with tempfile.TemporaryDirectory() as temp:
+            codex_home = Path(temp)
+            session_dir = codex_home / 'sessions'
+            session_dir.mkdir()
+            rollout = session_dir / 'rollout-s.jsonl'
+            rollout.write_text('\n'.join(json.dumps(row) for row in rows), encoding='utf-8')
+            command = [sys.executable, str(Path(__file__).with_name('codex_session_signature.py')),
+                       '--session', 's', '--seat', 'SEAT', '--codex-home', str(codex_home),
+                       '--snapshot', str(codex_home / 'missing-snapshot.json')]
+            bounded = subprocess.run(command, capture_output=True, text=True)
+            expanded = subprocess.run(command + ['--full-history'], capture_output=True, text=True)
+        self.assertEqual(bounded.returncode, 0, bounded.stderr)
+        self.assertEqual(expanded.returncode, 0, expanded.stderr)
+        bounded_rows = [line for line in bounded.stdout.splitlines()
+                        if line.startswith('  p') and not line.startswith('  p#')]
+        expanded_rows = [line for line in expanded.stdout.splitlines()
+                         if line.startswith('  p') and not line.startswith('  p#')]
+        self.assertEqual(len(bounded_rows), 20)
+        self.assertEqual(len(expanded_rows), 21)
+
+    def test_default_prompt_history_intersects_newest_20_with_last_24_hours(self):
+        now = dt.datetime.now(dt.timezone.utc)
+        rows = prefix()
+        for n in range(1, 26):
+            rows += prompt_group(f't{n}', now - dt.timedelta(minutes=26-n))
+        rendered = render(analyse(rows, 's'), 'SEAT')
+        prompt_rows = [line for line in rendered.splitlines()
+                       if line.startswith('  p') and not line.startswith('  p#')]
+        self.assertEqual(len(prompt_rows), 20)
+        self.assertTrue(prompt_rows[0].startswith('  p25'))
+        self.assertTrue(prompt_rows[-1].startswith('  p6'))
+        self.assertNotIn('\n  p5 ', rendered)
+        self.assertIn('cumulat.  in(noncache) 1.0k', rendered)
+        self.assertIn('For all prompt rows on your next reply, say: relay-baton-codex full-history.', rendered)
+
+    def test_default_prompt_history_excludes_aged_groups_using_absolute_time(self):
+        now = dt.datetime.now(dt.timezone.utc)
+        recent_local = (now - dt.timedelta(hours=23)).astimezone(dt.timezone(dt.timedelta(hours=2)))
+        old_local = (now - dt.timedelta(hours=25)).astimezone(dt.timezone(dt.timedelta(hours=-7)))
+        rows = [event('turn_context', turn_id='recent', model='gpt-6-astra', effort='medium')]
+        rows += prompt_group('old', old_local) + prompt_group('recent', recent_local)
+        rendered = render(analyse(rows, 's'), 'SEAT')
+        prompt_rows = [line for line in rendered.splitlines()
+                       if line.startswith('  p') and not line.startswith('  p#')]
+        self.assertEqual(len(prompt_rows), 1)
+        self.assertTrue(prompt_rows[0].startswith('  p2'))
+        self.assertIn('cumulat.  in(noncache) 80', rendered)
+
+    def test_default_prompt_history_includes_exact_cutoff_across_timezones(self):
+        now = dt.datetime(2026, 9, 9, 12, tzinfo=dt.timezone.utc)
+        boundary = (now - dt.timedelta(hours=24)).astimezone(
+            dt.timezone(dt.timedelta(hours=2)))
+        just_old = (now - dt.timedelta(hours=24, seconds=1)).astimezone(
+            dt.timezone(dt.timedelta(hours=-7)))
+        rows = [event('turn_context', turn_id='boundary', model='gpt-6-astra', effort='medium')]
+        rows += prompt_group('old', just_old) + prompt_group('boundary', boundary)
+        data = analyse(rows, 's')
+        rendered = render(data, 'SEAT', history_now=now)
+        prompt_rows = [line for line in rendered.splitlines()
+                       if line.startswith('  p') and not line.startswith('  p#')]
+        self.assertEqual(len(prompt_rows), 1)
+        self.assertTrue(prompt_rows[0].startswith('  p2'))
+
+    def test_full_history_override_is_one_render_and_preserves_original_numbers(self):
+        now = dt.datetime.now(dt.timezone.utc)
+        rows = prefix()
+        for n in range(1, 23):
+            age = dt.timedelta(hours=30) if n == 1 else dt.timedelta(minutes=23-n)
+            rows += prompt_group(f't{n}', now - age)
+        data = analyse(rows, 's')
+        expanded = render(data, 'SEAT', full_history=True)
+        bounded_again = render(data, 'SEAT')
+        expanded_rows = [line for line in expanded.splitlines()
+                         if line.startswith('  p') and not line.startswith('  p#')]
+        bounded_rows = [line for line in bounded_again.splitlines()
+                        if line.startswith('  p') and not line.startswith('  p#')]
+        self.assertEqual(len(expanded_rows), 22)
+        self.assertTrue(expanded_rows[0].startswith('  p22'))
+        self.assertTrue(expanded_rows[-1].startswith('  p1'))
+        self.assertIn('cumulat.  in(noncache) 880', expanded)
+        self.assertEqual(len(bounded_rows), 20)
+        self.assertTrue(bounded_rows[-1].startswith('  p3'))
+
     def test_codex_cache_write_is_not_a_separate_charge_column(self):
         d=analyse(prefix()+[usage('a')],'s')
         rendered=render(d,'SEAT')
@@ -86,13 +188,12 @@ class SignatureTests(unittest.TestCase):
         self.assertIn('12.0% capacity',s)
         self.assertNotIn('999999',s)
 
-    def test_cumulative_line_has_no_cost_and_prompt_rows_uncapped(self):
+    def test_cumulative_line_has_no_cost(self):
         rows=prefix()+[usage('a')]
         for n in range(2,22):
             rows += [event('event_msg',type='task_started',turn_id=f't{n}'),usage(str(n),turn=f't{n}')]
         s=render(analyse(rows,'s'),'SEAT')
         self.assertNotIn('$',next(x for x in s.splitlines() if x.startswith('cumulat.')))
-        self.assertEqual(sum(x.startswith('  p') and not x.startswith('  p#') for x in s.splitlines()),21)
 
     def test_main_bucket_windows_only_and_credits_not_money(self):
         snap={'observed_at':'2026-09-08T12:00:00Z','account':{'plan':'pro'},'buckets':{

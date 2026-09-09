@@ -39,6 +39,10 @@ def stamp(value=None, fmt='%Y-%m-%d %H:%M %Z'):
     return value.astimezone(EASTERN).strftime(fmt)
 
 
+def instant(value):
+    return dt.datetime.fromisoformat(value.replace('Z', '+00:00')).astimezone(dt.timezone.utc)
+
+
 def benchmark(usage, model):
     if model not in RATES or any(usage.get(k) is None for k in FIELDS[:4]):
         return None
@@ -195,7 +199,7 @@ def plan_line(snapshot):
             f' · observed {stamp(snapshot["observed_at"], "%m-%d %H:%M %Z")}')
 
 
-def render(data, seat, snapshot=None, condensed=False):
+def render(data, seat, snapshot=None, condensed=False, full_history=False, history_now=None):
     d, u = data, data['totals']
     pct = f'{100*d["context"]/d["runtime_window"]:.1f}%' if d['context'] is not None and d['runtime_window'] else 'unavailable'
     head = (f'{seat} · {d["session"]} · {pct} capacity · turn {len(d["records"])}'
@@ -215,10 +219,18 @@ def render(data, seat, snapshot=None, condensed=False):
     lines.append(plan_line(snapshot))
     lines.append(f'benchmark {money(d["benchmark"])} reported-token Standard API-equiv · {pct} capacity · rates {RATE_VERSION} · live TTL unobserved · {d["model"]} / {d["effort"]}')
     lines.append('tools     ' + (' · '.join(f'{k} {v}' for k, v in sorted(d['tools'].items(), key=lambda x: -x[1])) or 'no native tool calls recorded'))
-    lines.append('prompts   newest first; all native runs, including aborted runs; model calls, not tool calls')
+    history_label = 'full-history override' if full_history else 'default last 24h intersect newest 20'
+    lines.append(f'prompts   {history_label}; native runs include aborted runs; model calls, not tool calls')
+    lines.append('For all prompt rows on your next reply, say: relay-baton-codex full-history.')
     lines.append('  p#   date  time   calls   noncache       cw*        cr       out    API-equiv  heaviest model call')
-    for n in range(len(d['groups']), 0, -1):
-        g = d['groups'][n-1]; gu = g['usage']; vals = [gu.get(k) for k in FIELDS[:2]]
+    numbered = list(enumerate(d['groups'], 1))
+    if not full_history:
+        numbered = numbered[-20:]
+        history_now = (history_now or dt.datetime.now(dt.timezone.utc)).astimezone(dt.timezone.utc)
+        cutoff = history_now - dt.timedelta(hours=24)
+        numbered = [(n, g) for n, g in numbered if g.get('at') and instant(g['at']) >= cutoff]
+    for n, g in reversed(numbered):
+        gu = g['usage']; vals = [gu.get(k) for k in FIELDS[:2]]
         fresh = vals[0]-vals[1] if all(x is not None for x in vals) else None
         h = max(g['records'], key=lambda r: r['usage'].get('total_tokens') or 0, default=None)
         label = (f'{stamp(h["at"], "%H:%M:%S")} {h["id"][-8:] if h["id"] else "no-id"} {abbrev(h["usage"].get("total_tokens"))} tokens' if h else 'usage unavailable')
@@ -245,6 +257,8 @@ def main():
     parser.add_argument('--codex-home', type=Path, default=Path(os.environ.get('CODEX_HOME', str(Path.home()/'.codex'))))
     parser.add_argument('--snapshot', type=Path, default=Path.home()/'.threadops/usage/CODEX_USAGE_SNAPSHOT.json')
     parser.add_argument('--condensed', action='store_true')
+    parser.add_argument('--full-history', action='store_true',
+                        help='show all prompt rows for this invocation only')
     parser.add_argument('--json', action='store_true')
     parser.add_argument('--out', type=Path)
     args = parser.parse_args()
@@ -261,7 +275,8 @@ def main():
         parser.error('No native Codex rollout found for this task')
     d = analyse(load_rows(paths), args.session)
     snapshot = json.loads(args.snapshot.read_text(encoding='utf-8')) if args.snapshot.exists() else None
-    output = json.dumps(d, indent=2) if args.json else render(d, args.seat, snapshot, args.condensed)
+    output = (json.dumps(d, indent=2) if args.json
+              else render(d, args.seat, snapshot, args.condensed, args.full_history))
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(output+'\n', encoding='utf-8')

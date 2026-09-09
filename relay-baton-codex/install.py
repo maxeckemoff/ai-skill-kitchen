@@ -21,7 +21,7 @@ def global_block(generator: Path) -> str:
 For substantive final responses, run the native generator immediately before answering:
 `python \"{generator.as_posix()}\" --seat \"<assigned-seat>\"`
 
-If task-ID environment variables are unavailable, pass the current native Codex task UUID with `--session`. Include the generated FULL output unchanged, with uncapped prompt rows, followed by `Next prompt`, `Decision needed`, or `Thread terminal`. Explicit keep-alive pings are exempt. Missing data remains unavailable; benchmark figures are Standard API equivalents rather than spend. Do not reuse another task's metrics. A baton is `EMITTED` only after its exact block is durably persisted; a displayed or prepared block alone is `DRAFTED`.
+If task-ID environment variables are unavailable, pass the current native Codex task UUID with `--session`. Include the generated FULL output unchanged, followed by `Next prompt`, `Decision needed`, or `Thread terminal`. Prompt rows default to the intersection of the last 24 hours and newest 20 prompt runs; cumulative metrics and original prompt numbers remain unchanged. If the user says `relay-baton-codex full-history`, add `--full-history` for the next reply only, then return to the bounded default. This is a recognized skill phrase, not a built-in Codex slash command or persistent setting. Preserve the rendered line `For all prompt rows on your next reply, say: relay-baton-codex full-history.` Explicit keep-alive pings are exempt. Missing data remains unavailable; benchmark figures are Standard API equivalents rather than spend. Do not reuse another task's metrics. A baton is `EMITTED` only after its exact block is durably persisted; a displayed or prepared block alone is `DRAFTED`.
 {END}"""
 
 

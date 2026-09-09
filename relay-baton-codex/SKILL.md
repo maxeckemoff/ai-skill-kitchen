@@ -15,7 +15,15 @@ Immediately before a substantive final response, run the bundled generator:
 python <this-skill-directory>/scripts/codex_session_signature.py --seat <assigned-seat>
 ```
 
-If `CODEX_THREAD_ID` or `CODEX_SESSION_ID` is unavailable, pass the current native Codex task UUID with `--session`. Preserve the assigned seat or task identity. Include the generated FULL output without hand-editing its metrics or truncating prompt rows. Use `--condensed` only when the user explicitly requests it.
+If `CODEX_THREAD_ID` or `CODEX_SESSION_ID` is unavailable, pass the current native Codex task UUID with `--session`. Preserve the assigned seat or task identity. Include the generated output without hand-editing its metrics. Use `--condensed` only when the user explicitly requests it.
+
+FULL signatures include every metric section, while prompt-history display defaults to the intersection of the last 24 hours and the newest 20 native prompt runs: at most 20 rows, with none older than 24 hours. Cumulative metrics still cover every observed native record, and displayed prompt rows keep their original prompt numbers.
+
+Treat the exact phrase `relay-baton-codex full-history` as a skill instruction for the next substantive reply. Run that reply's generator once with `--full-history`, show all prompt rows, then omit the flag on later replies so they return to the bounded default. This phrase is not a built-in Codex slash command and does not change persistent configuration. The renderer prints this routing reminder:
+
+```text
+For all prompt rows on your next reply, say: relay-baton-codex full-history.
+```
 
 The FULL output keeps this field order:
 
@@ -26,7 +34,7 @@ The FULL output keeps this field order:
 5. `plan`, using the account windows actually available
 6. `benchmark`, clearly labeled as Standard API equivalent rather than spend
 7. `tools`
-8. uncapped `prompts`, newest first
+8. `prompts`, newest first, bounded by default or all rows for a one-response full-history override
 9. `caveats`
 10. timezone-stamped completion line
 
