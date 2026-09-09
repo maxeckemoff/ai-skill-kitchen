@@ -5,7 +5,7 @@ This prompt pins the reviewed source commit `9ab6d4ca0193d3532cefcbf3569b9f29113
 ```text
 Fetch `https://github.com/maxeckemoff/ai-skill-kitchen` at immutable commit `9ab6d4ca0193d3532cefcbf3569b9f29113ea70d` into a new private local checkout outside any existing repository. Choose and report the absolute checkout path. Verify that HEAD is exactly the pinned commit; do not use a moving branch tip as the installation source. Install the portable Relay Baton for Codex from the checkout's `relay-baton-codex` directory.
 
-First read relay-baton-codex/README.md, relay-baton-codex/SKILL.md, relay-baton-codex/install.py, and both Python files under relay-baton-codex/scripts. Verify that the source contains no runtime records, credentials, usage snapshots, Codex configuration, private reports, or real baton data. Ask me one required choice before installation: "skill only" or "skill plus global FULL signatures." Do not infer the global option.
+First read relay-baton-codex/README.md, relay-baton-codex/SKILL.md, relay-baton-codex/install.py, and all four Python files under relay-baton-codex/scripts. Verify that the source contains no runtime records, credentials, usage snapshots, Codex configuration, private reports, or real baton data. Ask me one required choice before installation: "skill only" or "skill plus global FULL signatures." Do not infer the global option.
 
 After I choose, run relay-baton-codex/install.py with the matching option. Preserve my existing Codex AGENTS.md: the installer may append or update only its own marked section and must not replace unrelated content. Honor my CODEX_HOME when set. Keep timestamped skill and AGENTS backups outside skill discovery.
 
