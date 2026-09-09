@@ -1,6 +1,6 @@
 # Relay Baton for Codex
 
-This package adds a portable Codex skill for task handoffs and native FULL session signatures. It does not depend on another person's project tree, account, configuration, telemetry snapshots, or private coordination files.
+This package adds a portable Codex skill for task handoffs, authorized direct dispatch to verified existing Codex tasks, and native FULL session signatures. It does not depend on another person's project tree, account, configuration, telemetry snapshots, or private coordination files.
 
 Installing the skill gives Codex the capability when the skill is selected. It does not force a signature onto every task. The installer offers a separate, explicit opt-in for a global `~/.codex/AGENTS.md` instruction.
 
@@ -53,6 +53,20 @@ python "$HOME/.agents/skills/relay-baton-codex/scripts/codex_session_signature.p
 ```
 
 The following invocation returns to the bounded default when `--full-history` is omitted.
+
+## Direct task dispatch
+
+The skill can send a handoff through Codex's native existing-task message tool only after the user explicitly authorizes direct sending or establishes a trusted saved preference. It verifies a unique destination, persists the prompt, records actual transport results, and does not equate tool success with recipient action. `SENT`, `DELIVERED`, `FAILED`, and `UNCERTAIN` remain distinct; an uncertain result blocks automatic retry.
+
+The optional policy helper can review the decision boundary before and after a send:
+
+```powershell
+python scripts/dispatch_policy.py decide --authorized --candidate-id "TASK-ID" --prior-state NONE
+python scripts/dispatch_policy.py outcome --result success
+python scripts/test_dispatch_policy.py
+```
+
+Without authorization, or when the recipient is missing or ambiguous, the skill leaves a draft or explains the manual fallback. Existing-task authorization does not permit new-task creation, email, Slack, publication, or public posting.
 
 ## Privacy and scope
 

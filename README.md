@@ -34,7 +34,7 @@ These eighteen skills form a toolkit for operating multi-session agent workflows
 
 | Skill | What it does | Status |
 |---|---|---|
-| [relay-baton-codex](./relay-baton-codex) | Creates portable Codex handoffs with native FULL or CONDENSED session diagnostics, explicit baton provenance, and honest persisted send-state tracking. | Candidate |
+| [relay-baton-codex](./relay-baton-codex) | Creates portable Codex handoffs with native diagnostics, explicit baton provenance, honest send-state tracking, and user-authorized direct dispatch to verified existing tasks. | Candidate |
 
 ### Tool-specific field practice
 
