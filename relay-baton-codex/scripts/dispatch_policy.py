@@ -10,13 +10,26 @@ import json
 BLOCKING_PRIOR_STATES = {'SENT', 'DELIVERED', 'UNCERTAIN'}
 
 
-def decide(authorized: bool, candidate_ids: list[str], prior_state: str) -> dict:
+def decide(authorized: bool, surface: str, candidate_ids: list[str], prior_state: str) -> dict:
     prior_state = prior_state.upper()
     if prior_state in BLOCKING_PRIOR_STATES:
         return {
             'decision': 'DO_NOT_SEND',
             'reason': f'prior state {prior_state} blocks duplicate dispatch',
         }
+    if surface in {'claude-code', 'cowork'}:
+        return {
+            'decision': 'PREPARE_MANUAL_RELAY',
+            'state': 'PREPARED_MANUAL',
+            'reason': f'native Codex task transport does not address {surface}',
+        }
+    if surface == 'imported-claude-history':
+        return {
+            'decision': 'MANUAL_FALLBACK',
+            'reason': 'imported Claude history is not a native Codex recipient',
+        }
+    if surface != 'codex':
+        return {'decision': 'MANUAL_FALLBACK', 'reason': 'recipient surface is unknown'}
     if not authorized:
         return {'decision': 'DRAFT', 'reason': 'direct dispatch is not authorized'}
     if not candidate_ids:
@@ -42,6 +55,10 @@ def main() -> int:
 
     before = commands.add_parser('decide')
     before.add_argument('--authorized', action='store_true')
+    before.add_argument(
+        '--surface', required=True,
+        choices=['codex', 'claude-code', 'cowork', 'imported-claude-history', 'unknown'],
+    )
     before.add_argument('--candidate-id', action='append', default=[])
     before.add_argument(
         '--prior-state',
@@ -53,7 +70,7 @@ def main() -> int:
     after.add_argument('--result', required=True, choices=['success', 'failure', 'uncertain'])
     args = parser.parse_args()
 
-    payload = (decide(args.authorized, args.candidate_id, args.prior_state)
+    payload = (decide(args.authorized, args.surface, args.candidate_id, args.prior_state)
                if args.command == 'decide' else outcome(args.result))
     print(json.dumps(payload, sort_keys=True))
     return 0

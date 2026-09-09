@@ -93,14 +93,16 @@ Use native Codex task discovery and messaging tools when they are available:
 3. Optionally run the bundled guard before the tool call:
 
    ```text
-   python <this-skill-directory>/scripts/dispatch_policy.py decide --authorized --candidate-id <verified-task-id> --prior-state <STATE>
+   python <this-skill-directory>/scripts/dispatch_policy.py decide --authorized --surface codex --candidate-id <verified-task-id> --prior-state <STATE>
    ```
 
 4. Persist the exact self-contained prompt and pre-send intent before calling the native existing-task message tool. Until the tool result arrives, do not label it `SENT` or `DELIVERED`. The prompt must include the task, relevant evidence and paths, constraints, and an observable done condition.
 5. Record the actual tool result in the same turn. Tool success becomes `SENT`; it becomes `DELIVERED` only after recipient evidence. A definitive error becomes `FAILED`. An indeterminate result becomes `UNCERTAIN`, which blocks automatic retry until the destination is checked or the user directs another attempt. The helper can classify the result with `dispatch_policy.py outcome --result success|failure|uncertain`.
 6. Do not create acknowledgement loops. An informational receipt with no action does not generate another baton.
 
-Authorization to message an existing task does not authorize creating a new task. New-task creation still requires an explicit user request. Email, Slack, public posting, publication, and other transports require their own authorization. The native Codex task tool addresses Codex tasks; a Claude destination may or may not have its own available transport in a given environment. Check the actual tools instead of making a universal claim, and use a manual fallback when no authorized transport is available.
+Authorization to message an existing task does not authorize creating a new task. New-task creation still requires an explicit user request. Email, Slack, public posting, publication, and other transports require their own authorization.
+
+The native Codex task tool addresses verified Codex tasks. For a Claude Code or Cowork destination, prepare the self-contained baton in a fenced copy-paste block, label it `PREPARED_MANUAL`, and do not mark it `SENT`. Imported Claude history inside Codex does not prove that a native Codex recipient exists. An unknown surface also requires a clearly labeled manual fallback rather than a guessed task ID or new task. A particular Claude environment may expose other authorized transport tools, but this package makes no universal claim and does not implement Cowork auto-injection.
 
 ## Final response tail
 

@@ -61,12 +61,14 @@ The skill can send a handoff through Codex's native existing-task message tool o
 The optional policy helper can review the decision boundary before and after a send:
 
 ```powershell
-python scripts/dispatch_policy.py decide --authorized --candidate-id "TASK-ID" --prior-state NONE
+python scripts/dispatch_policy.py decide --authorized --surface codex --candidate-id "TASK-ID" --prior-state NONE
 python scripts/dispatch_policy.py outcome --result success
 python scripts/test_dispatch_policy.py
 ```
 
 Without authorization, or when the recipient is missing or ambiguous, the skill leaves a draft or explains the manual fallback. Existing-task authorization does not permit new-task creation, email, Slack, publication, or public posting.
+
+Codex-to-Claude Code and Codex-to-Cowork handoffs remain fenced copy-paste blocks labeled `PREPARED_MANUAL`; they are never marked `SENT` by the native Codex task tool. Imported Claude history is historical context, not evidence of a native Codex recipient. Unknown recipient surfaces also fall back manually. Cowork auto-injection is outside this initial implementation.
 
 ## Privacy and scope
 
