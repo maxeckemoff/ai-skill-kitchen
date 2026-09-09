@@ -73,10 +73,11 @@ def money(n):
 
 def tokens(u):
     # Codex's charging categories are uncached input, cached input, output.
-    # Reported writes are diagnostic subsets, not a fourth Codex charge category.
+    # Cache creation processing is included in full-rate noncached input.
+    # The native write field does not establish actual cache creation volume.
     inp, cached = u.get('input_tokens'), u.get('cached_input_tokens')
     noncache = inp - cached if inp is not None and cached is not None else None
-    return (f'in(noncache) {abbrev(noncache)} · cache-write n/a*'
+    return (f'in(noncache) {abbrev(noncache)} · cache-write unmeasured*'
             f' · cache-read {abbrev(u.get("cached_input_tokens"))} · out {abbrev(u.get("output_tokens"))}')
 
 
@@ -154,7 +155,7 @@ def analyse(rows, session):
                 runtime_window=runtime, context=context, context_at=context_at,
                 model=newest_model, effort=newest_effort, duplicates=duplicates,
                 rates_version=RATE_VERSION, rates_source=RATE_SOURCE,
-                cache_write_billing='not_separately_charged_in_codex', cache_write_source=CACHE_SOURCE,
+                cache_write_billing='included_in_full_rate_noncache_codex_credits', cache_write_source=CACHE_SOURCE,
                 conflicting_duplicates=conflicts, missing_ids=missing_ids,
                 malformed=malformed, latest_thread_counter=latest_counter)
 
@@ -234,12 +235,12 @@ def render(data, seat, snapshot=None, condensed=False, full_history=False, histo
         fresh = vals[0]-vals[1] if all(x is not None for x in vals) else None
         h = max(g['records'], key=lambda r: r['usage'].get('total_tokens') or 0, default=None)
         label = (f'{stamp(h["at"], "%H:%M:%S")} {h["id"][-8:] if h["id"] else "no-id"} {abbrev(h["usage"].get("total_tokens"))} tokens' if h else 'usage unavailable')
-        lines.append(f'  p{n:<3} {stamp(g["at"], "%m-%d %H:%M")} {len(g["records"]):>5} {abbrev(fresh):>10} {"n/a":>9} {abbrev(gu.get("cached_input_tokens")):>9} {abbrev(gu.get("output_tokens")):>9} {money(g["benchmark"]):>12}  {label}')
+        lines.append(f'  p{n:<3} {stamp(g["at"], "%m-%d %H:%M")} {len(g["records"]):>5} {abbrev(fresh):>10} {"unmeas.":>9} {abbrev(gu.get("cached_input_tokens")):>9} {abbrev(gu.get("output_tokens")):>9} {money(g["benchmark"]):>12}  {label}')
     caveats = ["Codex records only; imported Claude turns excluded; turn = unique recorded model responses",
                "current run provisional through the last persisted response; this final answer is not yet included",
                "context is the latest token_count request snapshot, not cumulative tokens",
                f'reasoning {abbrev(u.get("reasoning_output_tokens"))} is included in output; cached input is included in input',
-               f'*cw: no separate Codex cache-write charge; native field reports {abbrev(u.get("cache_write_input_tokens"))} tokens, not proof that no cache entries were created; noncache=input minus cache-read',
+               f'*cw: native field reports {abbrev(u.get("cache_write_input_tokens"))} tokens; actual cache creation volume is not established; full-rate noncache=input minus cache-read already includes any cache creation without an extra write surcharge; reused cache-read is 0.1x; not every noncached input token necessarily becomes cached',
                "reported-token API benchmark is not Codex spend/credits; API write billing and long-input pricing differ; excludes unreported cache creation and Fast/tool charges; actual billed extra usage unavailable",
                f'{d["duplicates"]} replayed response records removed; {d["conflicting_duplicates"]} conflicting; {d["missing_ids"]} unidentifiable retained']
     counter = d.get('latest_thread_counter') or {}

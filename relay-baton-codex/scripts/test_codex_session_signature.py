@@ -122,14 +122,17 @@ class SignatureTests(unittest.TestCase):
         self.assertEqual(len(bounded_rows), 20)
         self.assertTrue(bounded_rows[-1].startswith('  p3'))
 
-    def test_codex_cache_write_is_not_a_separate_charge_column(self):
+    def test_codex_cache_write_is_unmeasured_without_a_separate_surcharge(self):
         d=analyse(prefix()+[usage('a')],'s')
         rendered=render(d,'SEAT')
         # Input100 minus cached60 = uncached40, including the reported10 writes.
         self.assertIn('in(noncache) 40',rendered)
-        self.assertIn('cache-write n/a*',rendered)
+        self.assertIn('cache-write unmeasured*',rendered)
+        self.assertIn('unmeas.', rendered)
         self.assertIn('native field reports 10 tokens',rendered)
-        self.assertIn('not proof that no cache entries were created',rendered)
+        self.assertIn('actual cache creation volume is not established',rendered)
+        self.assertIn('full-rate noncache=input minus cache-read already includes any cache creation', rendered)
+        self.assertIn('not every noncached input token necessarily becomes cached', rendered)
         self.assertEqual(d['totals']['cache_write_input_tokens'],10)
 
     def test_settings_before_first_context_identify_compaction_model(self):

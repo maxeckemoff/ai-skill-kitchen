@@ -14,6 +14,8 @@ FULL signatures provide every diagnostic section, but their output also becomes 
 
 The generator's Standard API benchmark supports Astra. Other models remain `unavailable`; this is intentional. Account meters also remain unavailable unless the user's own native snapshot is available.
 
+For Codex credits, cache creation processing is covered inside full-rate noncached input and reused cached input is 0.1x. The display labels cache writes `unmeasured*`: the raw native field remains visible, but it does not establish actual creation volume. Noncached input already includes any creation, so the write count is not added again. Direct API benchmark pricing is a separate comparison and is never labeled as Codex spend.
+
 ## Install
 
 Check out the repository at a trusted commit, open a terminal in this `relay-baton-codex` folder, and choose one mode:
