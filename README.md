@@ -6,7 +6,7 @@ For the pattern these skills implement, see [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ## What's inside
 
-These seventeen skills form a toolkit for operating a multi-session Cowork architecture, where one human orchestrator dispatches work across role-specialized agent sessions (Manager, Architect, Developer, Schema Expert, specialists) that coordinate through shared markdown bridge files, plus a growing set of tool-specific field practice and execution-convention skills for the concrete tools those sessions use day to day. They are grouped by role below.
+These eighteen skills form a toolkit for operating multi-session agent workflows, where one human orchestrator dispatches work across role-specialized sessions that coordinate through shared markdown bridge files, plus tool-specific field practice and execution-convention skills for the concrete tools those sessions use day to day. They are grouped by role below.
 
 ### Core multi-session orchestration
 
@@ -29,6 +29,12 @@ These seventeen skills form a toolkit for operating a multi-session Cowork archi
 | [bounded-source-interrogation](./bounded-source-interrogation) | Profiles a large external source (big Sheet, export, COQL pull) for structure, counts, and a sample without loading it whole, to prevent context saturation. | Released |
 | [live-source-watch](./live-source-watch) | Watches a per-session list of Drive docs, URLs, and local files by modifiedTime / mtime / hash and surfaces only the deltas as a one-line heads-up. | Released |
 | [usage-check-on-prompt](./usage-check-on-prompt) | Reports a compact Claude session and weekly usage line via the claude-usage MCP, at session start and on request. | Released |
+
+### Codex-specific tools
+
+| Skill | What it does | Status |
+|---|---|---|
+| [relay-baton-codex](./relay-baton-codex) | Creates portable Codex handoffs with native diagnostics, explicit baton provenance, honest send-state tracking, and user-authorized direct dispatch to verified existing tasks. | Candidate |
 
 ### Tool-specific field practice
 
